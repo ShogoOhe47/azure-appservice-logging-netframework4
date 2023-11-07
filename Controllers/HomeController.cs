@@ -13,17 +13,13 @@ namespace azure_appservice_logging_netframework4.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Logging()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Diagnostics()
         {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }
