@@ -1,33 +1,66 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewData["Title"] = "Diagnostics";
 }
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+    <!-- TOC -->
+    <a href="#http_request_header_easyauth">App Service Authentication</a>
+    <br />
+    <a href="#http_request_header">HTTP Request Header</a>
+    <br />
+    <!-- TOC -->
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
+    @{
+        // Get HttpRequestHeader
+        System.Collections.Specialized.NameValueCollection collection;
+        collection = Request.Headers;
+    }
+
+
+    <h3 id="http_request_header_easyauth">App Service Authentication</h3>
+    @{
+        List<string> appsvcAuthRequestHeaderKeys = new List<string>() { "X-MS-CLIENT-PRINCIPAL-NAME", "X-MS-CLIENT-PRINCIPAL-ID", "X-MS-CLIENT-PRINCIPAL-IDP", "X-MS-CLIENT-PRINCIPAL", "X-MS-TOKEN-AAD-ACCESS-TOKEN", "X-MS-TOKEN-AAD-EXPIRES-ON", "X-MS-TOKEN-AAD-ID-TOKEN" };
+    }
+    @if (System.Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED") == "True")
+    {
+        // App Service Authentication is Enabled
+        <p>App Service Authentication featture is <b>Enable</b>.</p>
+    }
+    else
+    {
+        <p>App Service Authentication featture is <b>Disable</b>.</p>
+    }
+    <ul>
+    <li>WEBSITE_AUTH_ENABLED : @System.Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED")</li>
+    @foreach (string key in appsvcAuthRequestHeaderKeys)
+    {
+        String[] values = collection.GetValues(key);
+        if (values != null)
+        {
+            <li>@key : @String.Join(", ", values)</li>
+        }
+        else
+        {
+            <li>@key : ---</li>
+        }
+    }
+    </ul>
+
+
+
+    <h3 id="http_request_header">ALL HTTP Request Header</h3>
+
+    <ul>
+        @{
+            // https://learn.microsoft.com/dotnet/api/system.web.httprequest.headers?view=netframework-4.8.1
+            String[] collectionKeys = collection.AllKeys;
+            foreach (String key in collectionKeys)
+            {
+                String[] values = collection.GetValues(key);
+                <li>@key : @String.Join(", ", values)</li>
+            }
+        }
+    </ul>
 </main>
