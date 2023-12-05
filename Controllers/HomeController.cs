@@ -26,6 +26,7 @@ namespace azure_appservice_logging_netframework4.Controllers
                 // System.Diagnostics.Trace.TraceInformation is logging to AppServiceLog:ApplicationLog, DiagnosticsSettings:AppServiceAppLogs
                 System.Diagnostics.Trace.TraceError($"{className}#{methodName}: Logging page is called. records from from System.Diagnostics.Trace.TraceError() method.");
             }
+            // Console.WriteLine is not logging.
             Console.WriteLine($"{className}#{methodName}: Logging page is called. records from from Console.WriteLine() method.");
             return View();
         }
